@@ -47,15 +47,6 @@ async function main() {
 }
 
 function animate(elapsedTime) {
-  // material.uniforms.uTime.value = elapsedTime;
-
-  // for (let i = 0; i < 10; i++) {
-  //   renderer.setRenderTarget(targetA);
-  //   material.uniforms.uTexture.value = targetB.texture;
-  //   renderer.render(scene, camera);
-  //   swapRenderTargets();
-  // }
-
   for (let i = 0; i < layers.length; i++) {
     layers[i].draw(renderer, camera, elapsedTime);
   }
