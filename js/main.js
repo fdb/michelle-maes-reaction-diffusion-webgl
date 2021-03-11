@@ -6,44 +6,6 @@ import WebcamLayer from "./layers/webcam.js";
 
 let canvas, scene, camera, renderer, layers, mesh, material;
 
-function animate(elapsedTime) {
-  // material.uniforms.uTime.value = elapsedTime;
-
-  // for (let i = 0; i < 10; i++) {
-  //   renderer.setRenderTarget(targetA);
-  //   material.uniforms.uTexture.value = targetB.texture;
-  //   renderer.render(scene, camera);
-  //   swapRenderTargets();
-  // }
-
-  for (let i = 0; i < layers.length; i++) {
-    layers[i].draw(renderer, camera, elapsedTime);
-  }
-
-  let lastLayer = layers[layers.length - 1];
-  material.map = lastLayer.target.texture;
-
-  renderer.setRenderTarget(null);
-  renderer.render(scene, camera);
-
-  requestAnimationFrame(animate);
-}
-
-function resize() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  const aspect = width / height;
-  camera.left = (-aspect * height) / 2;
-  camera.right = (aspect * height) / 2;
-  camera.top = height / 2;
-  camera.bottom = -height / 2;
-  camera.updateProjectionMatrix();
-  renderer.setSize(width, height);
-  for (const layer of layers) {
-    layer.resize(width, height);
-  }
-}
-
 async function main() {
   canvas = document.getElementById("c");
   let width = canvas.width;
@@ -82,6 +44,44 @@ async function main() {
   }
 
   requestAnimationFrame(animate);
+}
+
+function animate(elapsedTime) {
+  // material.uniforms.uTime.value = elapsedTime;
+
+  // for (let i = 0; i < 10; i++) {
+  //   renderer.setRenderTarget(targetA);
+  //   material.uniforms.uTexture.value = targetB.texture;
+  //   renderer.render(scene, camera);
+  //   swapRenderTargets();
+  // }
+
+  for (let i = 0; i < layers.length; i++) {
+    layers[i].draw(renderer, camera, elapsedTime);
+  }
+
+  let lastLayer = layers[layers.length - 1];
+  material.map = lastLayer.target.texture;
+
+  renderer.setRenderTarget(null);
+  renderer.render(scene, camera);
+
+  requestAnimationFrame(animate);
+}
+
+function resize() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const aspect = width / height;
+  camera.left = (-aspect * height) / 2;
+  camera.right = (aspect * height) / 2;
+  camera.top = height / 2;
+  camera.bottom = -height / 2;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height);
+  for (const layer of layers) {
+    layer.resize(width, height);
+  }
 }
 
 main();
