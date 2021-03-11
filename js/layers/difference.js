@@ -85,22 +85,14 @@ export default class DifferenceLayer {
     this.outputTarget.setSize(width, height);
   }
 
-  swapRenderTargets() {
-    let tmp = this.targetA;
-    this.targetA = this.targetB;
-    this.targetB = tmp;
-  }
-
   draw(renderer, camera, elapsedTime, prevLayer) {
+    // Render the difference operation
     this.material.uniforms.uTexture1.value = prevLayer.target.texture;
     this.material.uniforms.uTexture2.value = this.inputTarget.texture;
-
     this.mesh.material = this.material;
     renderer.setRenderTarget(this.outputTarget);
     renderer.render(this.scene, camera);
     renderer.setRenderTarget(null);
-
-    this.target = this.outputTarget;
 
     // Copy the output of the prevLayer into the input texture
     renderer.setRenderTarget(this.inputTarget);
@@ -108,5 +100,7 @@ export default class DifferenceLayer {
     this.mesh.material = this.copyMaterial;
     renderer.render(this.scene, camera);
     renderer.setRenderTarget(null);
+
+    this.target = this.outputTarget;
   }
 }
