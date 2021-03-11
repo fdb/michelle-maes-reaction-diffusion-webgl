@@ -19,12 +19,13 @@ void main() {
 const fragmentShader = `
 precision mediump float;
 
-uniform float uTime;
 uniform sampler2D uTexture;
+uniform sampler2D uDrawTexture;
 uniform float udA;
 uniform float udB;
 uniform float uFeed;
 uniform float uKill;
+uniform float uInfluence;
 uniform vec2 uTexelSize;
 
 varying vec2 vUv;
@@ -65,7 +66,7 @@ vec4 react(vec4 pixel, vec4 neighbors) {
 
 void main() {
   vec2 uv = vUv;
-  vec4 pixel = texture2D(uTexture, uv);
+  vec4 pixel = texture2D(uTexture, uv) + texture2D(uDrawTexture, uv) * uInfluence;
   vec4 neighbors = laplace(uv);
   vec4 result = react(pixel, neighbors);
   gl_FragColor = result;
@@ -76,26 +77,20 @@ export default class ReactionDiffusionLayer {
   constructor() {}
 
   async setup(width, height) {
-    // Intialize the initial texture.
-    await new Promise((resolve) => {
-      const textureLoader = new THREE.TextureLoader();
-      this.texture = textureLoader.load("./img/flower.jpg", resolve);
-    });
-
     // Setup the material
     this.material = new THREE.RawShaderMaterial({
       vertexShader,
       fragmentShader,
       uniforms: {
-        uTime: { value: 0.0 },
-        uTexture: { value: this.texture },
+        uTexture: { value: null },
+        uDrawTexture: { value: null },
         udA: { value: 1.0 },
         udB: { value: 0.13 },
         uFeed: { value: 0.051 },
         uKill: { value: 0.08 },
+        uInfluence: { value: 0.5 },
         uTexelSize: { value: new THREE.Vector2(1 / width, 1 / height) },
       },
-      // wireframe: true,
     });
 
     gui
@@ -122,6 +117,12 @@ export default class ReactionDiffusionLayer {
       .max(0.1)
       .step(0.0001)
       .name("Kill");
+    gui
+      .add(this.material.uniforms.uInfluence, "value")
+      .min(0)
+      .max(1.0)
+      .step(0.1)
+      .name("Influence");
 
     this.targetA = new THREE.WebGLRenderTarget(width, height);
     this.targetB = new THREE.WebGLRenderTarget(width, height);
@@ -147,7 +148,7 @@ export default class ReactionDiffusionLayer {
 
   draw(renderer, camera, elapsedTime, prevLayer) {
     renderer.setRenderTarget(this.targetA);
-    this.material.uniforms.uTime.value = elapsedTime;
+    this.material.uniforms.uDrawTexture.value = prevLayer.target.texture;
     renderer.render(this.scene, camera);
     renderer.setRenderTarget(null);
     this.swapRenderTargets();

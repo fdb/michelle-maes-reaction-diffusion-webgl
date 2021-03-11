@@ -39,7 +39,7 @@ async function main() {
   const reactionDiffusionLayer = new ReactionDiffusionLayer();
   const webcamLayer = new WebcamLayer();
   const differenceLayer = new DifferenceLayer();
-  layers = [webcamLayer, differenceLayer];
+  layers = [webcamLayer, differenceLayer, reactionDiffusionLayer];
 
   for (const layer of layers) {
     await layer.setup(width, height);
