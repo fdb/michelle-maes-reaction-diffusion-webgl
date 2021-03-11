@@ -75,8 +75,8 @@ export default class DifferenceLayer {
     this.mesh.scale.set(width, height, 1);
     this.scene.add(this.mesh);
 
-    this.inputTarget = new THREE.WebGLRenderTarget(width, height);
-    this.outputTarget = new THREE.WebGLRenderTarget(width, height);
+    this.inputTarget = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
+    this.outputTarget = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
   }
 
   resize(width, height) {

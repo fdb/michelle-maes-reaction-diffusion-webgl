@@ -18,7 +18,7 @@ export default class ImageLayer {
     this.mesh = new THREE.Mesh(geometry, material);
     this.mesh.scale.set(width, height, 1);
     this.scene.add(this.mesh);
-    this.target = new THREE.WebGLRenderTarget(width, height);
+    this.target = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
   }
 
   resize(width, height) {

@@ -93,39 +93,14 @@ export default class ReactionDiffusionLayer {
       },
     });
 
-    gui
-      .add(this.material.uniforms.udA, "value")
-      .min(0)
-      .max(1)
-      .step(0.01)
-      .name("dA");
-    gui
-      .add(this.material.uniforms.udB, "value")
-      .min(0)
-      .max(1)
-      .step(0.01)
-      .name("dB");
-    gui
-      .add(this.material.uniforms.uFeed, "value")
-      .min(0)
-      .max(0.1)
-      .step(0.0001)
-      .name("Feed");
-    gui
-      .add(this.material.uniforms.uKill, "value")
-      .min(0)
-      .max(0.1)
-      .step(0.0001)
-      .name("Kill");
-    gui
-      .add(this.material.uniforms.uInfluence, "value")
-      .min(0)
-      .max(1.0)
-      .step(0.1)
-      .name("Influence");
+    gui.add(this.material.uniforms.udA, "value").min(0).max(1).step(0.01).name("dA");
+    gui.add(this.material.uniforms.udB, "value").min(0).max(1).step(0.01).name("dB");
+    gui.add(this.material.uniforms.uFeed, "value").min(0).max(0.1).step(0.0001).name("Feed");
+    gui.add(this.material.uniforms.uKill, "value").min(0).max(0.1).step(0.0001).name("Kill");
+    gui.add(this.material.uniforms.uInfluence, "value").min(0).max(1.0).step(0.1).name("Influence");
 
-    this.targetA = new THREE.WebGLRenderTarget(width, height);
-    this.targetB = new THREE.WebGLRenderTarget(width, height);
+    this.targetA = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
+    this.targetB = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
 
     const geometry = new THREE.PlaneGeometry();
     this.mesh = new THREE.Mesh(geometry, this.material);

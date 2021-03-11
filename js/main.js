@@ -26,7 +26,14 @@ async function main() {
   );
   camera.position.z = 1;
 
-  renderer = new THREE.WebGLRenderer({ canvas });
+  renderer = new THREE.WebGLRenderer({
+    canvas,
+    preserveDrawingBuffer: true,
+    powerPreference: "high-performance",
+    depth: false,
+    stencil: false,
+  });
+  renderer.autoClear = false;
   renderer.setSize(width, height);
 
   const geometry = new THREE.PlaneGeometry();

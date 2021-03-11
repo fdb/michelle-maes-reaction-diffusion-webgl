@@ -37,7 +37,7 @@ export default class WebcamLayer {
     this.mesh = new THREE.Mesh(geometry, material);
     this.mesh.scale.set(width, height, 1);
     this.scene.add(this.mesh);
-    this.target = new THREE.WebGLRenderTarget(width, height);
+    this.target = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
   }
 
   resize(width, height) {
@@ -45,13 +45,7 @@ export default class WebcamLayer {
   }
 
   draw(renderer, camera) {
-    this.videoContext.drawImage(
-      this.video,
-      0,
-      0,
-      this.videoCanvas.width,
-      this.videoCanvas.height
-    );
+    this.videoContext.drawImage(this.video, 0, 0, this.videoCanvas.width, this.videoCanvas.height);
     this.videoTexture.needsUpdate = true;
 
     renderer.setRenderTarget(this.target);
