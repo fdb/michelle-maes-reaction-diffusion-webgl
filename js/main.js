@@ -3,6 +3,7 @@ import * as dat from "https://unpkg.com/dat.gui@0.7.7/build/dat.gui.module.js";
 import ImageLayer from "./layers/image.js";
 import ReactionDiffusionLayer from "./layers/reaction-diffusion.js";
 import WebcamLayer from "./layers/webcam.js";
+import DifferenceLayer from "./layers/difference.js";
 
 let canvas, scene, camera, renderer, layers, mesh, material;
 
@@ -37,7 +38,8 @@ async function main() {
   const imageLayer = new ImageLayer("./img/flower.jpg");
   const reactionDiffusionLayer = new ReactionDiffusionLayer();
   const webcamLayer = new WebcamLayer();
-  layers = [reactionDiffusionLayer];
+  const differenceLayer = new DifferenceLayer();
+  layers = [webcamLayer, differenceLayer];
 
   for (const layer of layers) {
     await layer.setup(width, height);
@@ -48,7 +50,7 @@ async function main() {
 
 function animate(elapsedTime) {
   for (let i = 0; i < layers.length; i++) {
-    layers[i].draw(renderer, camera, elapsedTime);
+    layers[i].draw(renderer, camera, elapsedTime, layers[i - 1]);
   }
 
   let lastLayer = layers[layers.length - 1];
