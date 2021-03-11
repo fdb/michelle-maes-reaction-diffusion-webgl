@@ -84,11 +84,11 @@ export default class ReactionDiffusionLayer {
       uniforms: {
         uTexture: { value: null },
         uDrawTexture: { value: null },
-        udA: { value: 1.0 },
-        udB: { value: 0.13 },
-        uFeed: { value: 0.051 },
-        uKill: { value: 0.08 },
-        uInfluence: { value: 0.5 },
+        udA: { value: 0.38 },
+        udB: { value: 0.16 },
+        uFeed: { value: 0.03 },
+        uKill: { value: 0.062 },
+        uInfluence: { value: 0.2 },
         uTexelSize: { value: new THREE.Vector2(1 / width, 1 / height) },
       },
     });
