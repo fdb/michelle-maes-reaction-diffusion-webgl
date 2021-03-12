@@ -1,10 +1,9 @@
-import * as THREE from "https://unpkg.com/three/build/three.module.js";
+import * as THREE from "/third_party/three.module.js";
 
 export default class WebcamLayer {
   constructor() {}
 
   async setup(width, height) {
-    this.scene = new THREE.Scene();
     this.texture = null;
     this.video = document.createElement("video");
     this.videoCanvas = document.createElement("canvas");
@@ -14,13 +13,11 @@ export default class WebcamLayer {
       audio: false,
     });
     this.video.srcObject = stream;
-    await new Promise((resolve, reject) => {
+    await new Promise((resolve) => {
       this.video.onloadedmetadata = () => {
         this.video.play();
-        console.log(this.video);
         this.videoCanvas.width = this.video.videoWidth;
         this.videoCanvas.height = this.video.videoHeight;
-        console.log(this.videoCanvas);
         resolve();
       };
     });
@@ -28,20 +25,15 @@ export default class WebcamLayer {
     this.videoTexture.minFilter = THREE.LinearFilter;
     this.videoTexture.magFilter = THREE.LinearFilter;
 
-    const geometry = new THREE.PlaneGeometry();
+    const geometry = new THREE.PlaneGeometry(2, 2);
     const material = new THREE.MeshBasicMaterial({
       map: this.videoTexture,
       color: 0xffffff,
       side: THREE.DoubleSide,
     });
     this.mesh = new THREE.Mesh(geometry, material);
-    this.mesh.scale.set(width, height, 1);
-    this.scene.add(this.mesh);
+    this.mesh.scale.y = 480 / 640;
     this.target = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
-  }
-
-  resize(width, height) {
-    this.mesh.scale.set(width, height, 1);
   }
 
   draw(renderer, camera) {
@@ -49,7 +41,7 @@ export default class WebcamLayer {
     this.videoTexture.needsUpdate = true;
 
     renderer.setRenderTarget(this.target);
-    renderer.render(this.scene, camera);
+    renderer.render(this.mesh, camera);
     renderer.setRenderTarget(null);
   }
 }

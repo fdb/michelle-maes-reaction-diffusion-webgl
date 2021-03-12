@@ -1,4 +1,4 @@
-import * as THREE from "https://unpkg.com/three/build/three.module.js";
+import * as THREE from "/third_party/three.module.js";
 
 const vertexShader = `
 uniform mat4 modelMatrix;
@@ -52,8 +52,6 @@ void main() {
 
 export default class DifferenceLayer {
   async setup(width, height) {
-    this.scene = new THREE.Scene();
-
     // Setup the material
     this.material = new THREE.RawShaderMaterial({
       vertexShader,
@@ -70,19 +68,11 @@ export default class DifferenceLayer {
       uniforms: { uTexture: { value: null } },
     });
 
-    const geometry = new THREE.PlaneGeometry();
+    const geometry = new THREE.PlaneGeometry(2, 2);
     this.mesh = new THREE.Mesh(geometry, this.material);
-    this.mesh.scale.set(width, height, 1);
-    this.scene.add(this.mesh);
 
     this.inputTarget = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
     this.outputTarget = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
-  }
-
-  resize(width, height) {
-    this.mesh.scale.set(width, height, 1);
-    this.inputTarget.setSize(width, height);
-    this.outputTarget.setSize(width, height);
   }
 
   draw(renderer, camera, elapsedTime, prevLayer) {
@@ -91,14 +81,14 @@ export default class DifferenceLayer {
     this.material.uniforms.uTexture2.value = this.inputTarget.texture;
     this.mesh.material = this.material;
     renderer.setRenderTarget(this.outputTarget);
-    renderer.render(this.scene, camera);
+    renderer.render(this.mesh, camera);
     renderer.setRenderTarget(null);
 
     // Copy the output of the prevLayer into the input texture
     renderer.setRenderTarget(this.inputTarget);
     this.copyMaterial.uniforms.uTexture.value = prevLayer.target.texture;
     this.mesh.material = this.copyMaterial;
-    renderer.render(this.scene, camera);
+    renderer.render(this.mesh, camera);
     renderer.setRenderTarget(null);
 
     this.target = this.outputTarget;

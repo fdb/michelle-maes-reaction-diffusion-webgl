@@ -1,4 +1,4 @@
-import * as THREE from "https://unpkg.com/three/build/three.module.js";
+import * as THREE from "/third_party/three.module.js";
 
 const vertexShader = `
 uniform mat4 modelMatrix;
@@ -41,8 +41,6 @@ export default class ColorMapLayer {
   }
 
   async setup(width, height) {
-    this.scene = new THREE.Scene();
-
     this.colorTexture = null;
     await new Promise((resolve) => {
       const textureLoader = new THREE.TextureLoader();
@@ -59,18 +57,10 @@ export default class ColorMapLayer {
       },
     });
 
-    const geometry = new THREE.PlaneGeometry();
+    const geometry = new THREE.PlaneGeometry(2, 2);
     this.mesh = new THREE.Mesh(geometry, this.material);
-    this.mesh.scale.set(width, height, 1);
-    this.scene.add(this.mesh);
 
     this.target = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
-  }
-
-  resize(width, height) {
-    this.mesh.scale.set(width, height, 1);
-    this.inputTarget.setSize(width, height);
-    this.outputTarget.setSize(width, height);
   }
 
   draw(renderer, camera, elapsedTime, prevLayer) {
@@ -78,7 +68,7 @@ export default class ColorMapLayer {
     this.material.uniforms.uInputTexture.value = prevLayer.target.texture;
     this.mesh.material = this.material;
     renderer.setRenderTarget(this.target);
-    renderer.render(this.scene, camera);
+    renderer.render(this.mesh, camera);
     renderer.setRenderTarget(null);
   }
 }

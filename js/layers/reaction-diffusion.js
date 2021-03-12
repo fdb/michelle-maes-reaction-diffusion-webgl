@@ -1,4 +1,4 @@
-import * as THREE from "https://unpkg.com/three/build/three.module.js";
+import * as THREE from "/third_party/three.module.js";
 
 const vertexShader = `
 uniform mat4 modelMatrix;
@@ -97,22 +97,13 @@ export default class ReactionDiffusionLayer {
     gui.add(this.material.uniforms.udB, "value").min(0).max(1).step(0.01).name("dB");
     gui.add(this.material.uniforms.uFeed, "value").min(0).max(0.1).step(0.0001).name("Feed");
     gui.add(this.material.uniforms.uKill, "value").min(0).max(0.1).step(0.0001).name("Kill");
-    gui.add(this.material.uniforms.uInfluence, "value").min(0).max(1.0).step(0.1).name("Influence");
+    gui.add(this.material.uniforms.uInfluence, "value").min(0).max(0.5).step(0.01).name("Influence");
 
     this.targetA = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
     this.targetB = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
 
-    const geometry = new THREE.PlaneGeometry();
+    const geometry = new THREE.PlaneGeometry(2, 2);
     this.mesh = new THREE.Mesh(geometry, this.material);
-    this.mesh.scale.set(width, height, 1);
-    this.scene = new THREE.Scene();
-    this.scene.add(this.mesh);
-  }
-
-  resize(width, height) {
-    this.mesh.scale.set(width, height, 1);
-    this.targetA.setSize(width, height);
-    this.targetB.setSize(width, height);
   }
 
   swapRenderTargets() {
@@ -124,7 +115,7 @@ export default class ReactionDiffusionLayer {
   draw(renderer, camera, elapsedTime, prevLayer) {
     renderer.setRenderTarget(this.targetA);
     this.material.uniforms.uDrawTexture.value = prevLayer.target.texture;
-    renderer.render(this.scene, camera);
+    renderer.render(this.mesh, camera);
     renderer.setRenderTarget(null);
     this.swapRenderTargets();
     this.material.uniforms.uTexture.value = this.targetB.texture;
