@@ -1,9 +1,11 @@
 import * as THREE from "https://unpkg.com/three/build/three.module.js";
 import * as dat from "https://unpkg.com/dat.gui@0.7.7/build/dat.gui.module.js";
+
+import ColorMapLayer from "./layers/color-map.js";
+import DifferenceLayer from "./layers/difference.js";
 import ImageLayer from "./layers/image.js";
 import ReactionDiffusionLayer from "./layers/reaction-diffusion.js";
 import WebcamLayer from "./layers/webcam.js";
-import DifferenceLayer from "./layers/difference.js";
 
 let canvas, scene, camera, renderer, layers, mesh, material;
 
@@ -16,14 +18,7 @@ async function main() {
   window.gui = gui;
 
   scene = new THREE.Scene();
-  camera = new THREE.OrthographicCamera(
-    -width / 2,
-    width / 2,
-    height / 2,
-    -height / 2,
-    1,
-    100
-  );
+  camera = new THREE.OrthographicCamera(-width / 2, width / 2, height / 2, -height / 2, 1, 100);
   camera.position.z = 1;
 
   renderer = new THREE.WebGLRenderer({
@@ -43,10 +38,12 @@ async function main() {
   scene.add(mesh);
 
   const imageLayer = new ImageLayer("./img/flower.jpg");
+  const colorMapLayer = new ColorMapLayer("./img/sunset.jpg");
   const reactionDiffusionLayer = new ReactionDiffusionLayer();
   const webcamLayer = new WebcamLayer();
   const differenceLayer = new DifferenceLayer();
   layers = [webcamLayer, differenceLayer, reactionDiffusionLayer];
+  // layers = [imageLayer, colorMapLayer];
 
   for (const layer of layers) {
     await layer.setup(width, height);
