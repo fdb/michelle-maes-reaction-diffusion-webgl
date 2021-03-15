@@ -32,6 +32,7 @@ void main() {
   // float gray = 0.21 * originalColor.r + 0.71 * originalColor.g + 0.07 * originalColor.b;
   gray = clamp(gray, 0.0, 1.0);
   gl_FragColor = texture2D(uColorTexture, vec2(gray, 0.5));
+  // gl_FragColor = vec4(gray, gray, gray, 1.0);
 }
 `;
 

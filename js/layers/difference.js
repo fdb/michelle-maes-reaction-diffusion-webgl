@@ -28,11 +28,12 @@ void main() {
   vec2 uv = vUv;
   vec4 pixel1 = texture2D(uTexture1, uv);
   vec4 pixel2 = texture2D(uTexture2, uv);
-  // vec4 clr = vec4(abs(pixel1.rgb - pixel2.rgb), 1.0);
+
   // float dist = distance(pixel1.rgb, pixel2.rgb);
-  // float val = dist > 1.1 ? 1.0 : 0.0;
-  gl_FragColor = vec4(abs(pixel2.rgb - pixel1.rgb), 1.0);
+  // float val = dist > 0.5 ? 1.0 : 0.0;
   // gl_FragColor = vec4(val, val, val, 1.0);
+
+  gl_FragColor = vec4(abs(pixel2.rgb - pixel1.rgb), 1.0);
 }
 `;
 

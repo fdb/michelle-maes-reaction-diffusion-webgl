@@ -30,7 +30,7 @@ async function main() {
   renderer.setSize(width, height);
 
   const geometry = new THREE.PlaneGeometry(2, 2);
-  material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  material = new THREE.MeshBasicMaterial({ color: "white" });
   mesh = new THREE.Mesh(geometry, material);
 
   const imageLayer = new ImageLayer("./img/flower.jpg");
@@ -38,10 +38,13 @@ async function main() {
   const reactionDiffusionLayer = new ReactionDiffusionLayer();
   const webcamLayer = new WebcamLayer();
   const differenceLayer = new DifferenceLayer();
+
   // layers = [imageLayer, colorMapLayer];
-  // layers = [webcamLayer, reactionDiffusionLayer];
-  layers = [webcamLayer, differenceLayer, reactionDiffusionLayer];
-  // layers = [webcamLayer, differenceLayer, reactionDiffusionLayer, colorMapLayer];
+  // layers = [webcamLayer, differenceLayer];
+  // layers = [webcamLayer, differenceLayer, reactionDiffusionLayer];
+  layers = [webcamLayer, differenceLayer, reactionDiffusionLayer, colorMapLayer];
+  // layers = [imageLayer, reactionDiffusionLayer];
+  // layers = [webcamLayer, colorMapLayer];
 
   for (const layer of layers) {
     await layer.setup(width, height);
